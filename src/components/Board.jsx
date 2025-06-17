@@ -1,3 +1,6 @@
+import React from "react";
+
+
 function Board() {
     const size = 8;
     const board = [];

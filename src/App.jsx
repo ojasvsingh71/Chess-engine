@@ -1,4 +1,5 @@
 import Board from "./components/Board.jsx";
+import React from "react";
 
 function App() {
   return (
