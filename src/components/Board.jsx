@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import pieces from "../assets";
 import { Pawn } from "../logics/pawn";
 import { Rook } from "../logics/rook";
+import { Bishop } from "../logics/bishop";
 
 function getImageKey(piece) {
     if (!piece) return null;
@@ -49,6 +50,11 @@ function Board() {
                 }
             }else if(piece.toUpperCase() === "R"){
                 if (!Rook(board, from, to, board[from.row][from.col])) {
+                    setSelected(null);
+                    return;
+                }
+            }else if(piece.toUpperCase() === "B"){
+                if (!Bishop(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }

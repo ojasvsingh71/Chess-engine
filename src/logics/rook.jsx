@@ -2,6 +2,7 @@ export function Rook(board, from, to, piece) {
     const rowDiff = from.row - to.row;
     const colDiff = from.col - to.col;
     const target = board[to.row][to.col];
+    console.log(piece);
 
     if (rowDiff === 0) {
         const step = from.col > to.col ? -1 : 1;
