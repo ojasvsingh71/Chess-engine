@@ -14,7 +14,7 @@ export function Bishop(board, from, to, piece) {
 
     let i = from.row + rstep;
     let j = from.col + cstep;
-    while (i >= 0 && j >= 0 && i <= 8 && j <= 8 && i !== to.row && j !== to.col) {
+    while (i !== to.row && j !== to.col) {
         // console.log(i, j);
         if (board[i][j] !== "") {
             alert("Invalid Move!!!");
@@ -23,7 +23,7 @@ export function Bishop(board, from, to, piece) {
         i += rstep;
         j += cstep;
     }
-    
+
     if (piece === "B" && target === target.toLowerCase()) return true;
     if (piece === "b" && target === target.toUpperCase()) return true;
 

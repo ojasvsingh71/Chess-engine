@@ -4,6 +4,7 @@ import { Pawn } from "../logics/pawn";
 import { Rook } from "../logics/rook";
 import { Bishop } from "../logics/bishop";
 import { Knight } from "../logics/knight";
+import { Queen } from "../logics/queen";
 
 function getImageKey(piece) {
     if (!piece) return null;
@@ -61,6 +62,11 @@ function Board() {
                 }
             }else if(piece.toUpperCase() === "N"){
                 if (!Knight(board, from, to, board[from.row][from.col])) {
+                    setSelected(null);
+                    return;
+                }
+            }else if(piece.toUpperCase() === "Q"){
+                if (!Queen(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }
