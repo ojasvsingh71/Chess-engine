@@ -23,7 +23,7 @@ export function Bishop(board, from, to, piece) {
         i += rstep;
         j += cstep;
     }
-    if (target === "") return true;
+    
     if (piece === "B" && target === target.toLowerCase()) return true;
     if (piece === "b" && target === target.toUpperCase()) return true;
 
