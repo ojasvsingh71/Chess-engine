@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import pieces from "../assets";
+import { Pawn } from "../logics/pawn";
 
 function getImageKey(piece) {
     if (!piece) return null;
@@ -10,14 +11,14 @@ function getImageKey(piece) {
 
 function Board() {
     const initialBoard = [
-        ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-        ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['', '', '', '', '', '', '', ''],
-        ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-        ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
+        ["r", "n", "b", "q", "k", "b", "n", "r"],
+        ["p", "p", "p", "p", "p", "p", "p", "p"],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["", "", "", "", "", "", "", ""],
+        ["P", "P", "P", "P", "P", "P", "P", "P"],
+        ["R", "N", "B", "Q", "K", "B", "N", "R"]
     ];
 
     const [board, setBoard] = useState(initialBoard);
@@ -27,7 +28,7 @@ function Board() {
         const clickedPiece = board[row][col];
 
         if (selected && selected.row === row && selected.col === col) {
-            selected(null);
+            setSelected(null);
             return;
         }
 
@@ -38,6 +39,11 @@ function Board() {
         } else {
             const from = selected;
             const to = { row, col };
+
+            if (!Pawn(board, from, to, board[from.row][from.col])) {
+                setSelected(null);
+                return;
+            }
 
             const newBoard = board.map(r => [...r]);
             newBoard[to.row][to.col] = board[from.row][from.col];
