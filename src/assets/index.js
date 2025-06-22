@@ -1,5 +1,5 @@
 import wP from "./pieces/wP.svg";
-import wR from "./pieces/wP.svg";
+import wR from "./pieces/wR.svg";
 import wN from "./pieces/wN.svg";
 import wB from "./pieces/wB.svg";
 import wQ from "./pieces/wQ.svg";

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import pieces from "../assets";
 import { Pawn } from "../logics/pawn";
+import { Rook } from "../logics/rook";
 
 function getImageKey(piece) {
     if (!piece) return null;
@@ -39,11 +40,21 @@ function Board() {
         } else {
             const from = selected;
             const to = { row, col };
+            const piece = board[from.row][from.col];
 
-            if (!Pawn(board, from, to, board[from.row][from.col])) {
-                setSelected(null);
-                return;
+            if (piece.toUpperCase() === "P") {
+                if (!Pawn(board, from, to, board[from.row][from.col])) {
+                    setSelected(null);
+                    return;
+                }
+            }else if(piece.toUpperCase() === "R"){
+                if (!Rook(board, from, to, board[from.row][from.col])) {
+                    setSelected(null);
+                    return;
+                }
             }
+
+
 
             const newBoard = board.map(r => [...r]);
             newBoard[to.row][to.col] = board[from.row][from.col];
