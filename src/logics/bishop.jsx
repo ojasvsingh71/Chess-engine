@@ -2,10 +2,10 @@ export function Bishop(board, from, to, piece) {
     const rowDiff = from.row - to.row;
     const colDiff = from.col - to.col;
     const target = board[to.row][to.col];
-    console.log(piece);
+    // console.log(piece);
 
     if (Math.abs(rowDiff) !== Math.abs(colDiff)) {
-        alert("Invalid Move!!!");
+        // alert("Invalid Move!!!");
         return false;
     }
 
@@ -27,7 +27,7 @@ export function Bishop(board, from, to, piece) {
     if (piece === "B" && target === target.toLowerCase()) return true;
     if (piece === "b" && target === target.toUpperCase()) return true;
 
-    alert("Invalid Move!!!");
+    // alert("Invalid Move!!!");
 
     return false;
 }

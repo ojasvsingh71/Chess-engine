@@ -6,6 +6,7 @@ import { Bishop } from "../logics/bishop";
 import { Knight } from "../logics/knight";
 import { Queen } from "../logics/queen";
 import { King } from "../logics/king";
+import { Checks } from "./checks";
 
 function getImageKey(piece) {
     if (!piece) return null;
@@ -29,6 +30,7 @@ function Board() {
     const [board, setBoard] = useState(initialBoard);
     const [selected, setSelected] = useState(null);
     const [turn, setTurn] = useState(1);
+    const [check, setCheck] = useState(0);
 
     const handleClick = (row, col) => {
         const clickedPiece = board[row][col];
@@ -99,6 +101,16 @@ function Board() {
             setBoard(newBoard);
             setTurn(!turn);
             setSelected(null);
+
+            if (Checks(newBoard, "k")) {
+                alert(`Black is in check!`);
+                setCheck(1);
+            }
+            if (Checks(newBoard, "K")) {
+                alert(`White is in check!`);
+                setCheck(1);
+            }
+
         }
     };
 
