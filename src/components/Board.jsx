@@ -28,6 +28,7 @@ function Board() {
 
     const [board, setBoard] = useState(initialBoard);
     const [selected, setSelected] = useState(null);
+    const [turn, setTurn] = useState(1);
 
     const handleClick = (row, col) => {
         const clickedPiece = board[row][col];
@@ -46,32 +47,44 @@ function Board() {
             const to = { row, col };
             const piece = board[from.row][from.col];
 
+            if (piece === piece.toLowerCase() && turn) {
+                setSelected(null);
+                alert(`It's white's turn!!!`);
+                return;
+            }
+
+            if (piece === piece.toUpperCase() && !turn) {
+                setSelected(null);
+                alert(`It's black's turn!!!`);
+                return;
+            }
+
             if (piece.toUpperCase() === "P") {
                 if (!Pawn(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }
-            }else if(piece.toUpperCase() === "R"){
+            } else if (piece.toUpperCase() === "R") {
                 if (!Rook(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }
-            }else if(piece.toUpperCase() === "B"){
+            } else if (piece.toUpperCase() === "B") {
                 if (!Bishop(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }
-            }else if(piece.toUpperCase() === "N"){
+            } else if (piece.toUpperCase() === "N") {
                 if (!Knight(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }
-            }else if(piece.toUpperCase() === "Q"){
+            } else if (piece.toUpperCase() === "Q") {
                 if (!Queen(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
                 }
-            }else if(piece.toUpperCase() === "K"){
+            } else if (piece.toUpperCase() === "K") {
                 if (!King(board, from, to, board[from.row][from.col])) {
                     setSelected(null);
                     return;
@@ -84,7 +97,7 @@ function Board() {
             newBoard[to.row][to.col] = board[from.row][from.col];
             newBoard[from.row][from.col] = "";
             setBoard(newBoard);
-
+            setTurn(!turn);
             setSelected(null);
         }
     };
