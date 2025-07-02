@@ -18,19 +18,19 @@ function getImageKey(piece) {
 
 
 function tryMove(board, from, to, piece) {
-  const type = piece.toUpperCase();
-  const legalPieceMove =
-        (type === "P" && Pawn(board, from, to, piece))   ||
-        (type === "R" && Rook(board, from, to, piece))   ||
+    const type = piece.toUpperCase();
+    const legalPieceMove =
+        (type === "P" && Pawn(board, from, to, piece)) ||
+        (type === "R" && Rook(board, from, to, piece)) ||
         (type === "B" && Bishop(board, from, to, piece)) ||
         (type === "N" && Knight(board, from, to, piece)) ||
-        (type === "Q" && Queen(board, from, to, piece))  ||
+        (type === "Q" && Queen(board, from, to, piece)) ||
         (type === "K" && King(board, from, to, piece));
 
-  if (!legalPieceMove) return false;       
-  if (!isSafeAfterMove(board, from, to, piece)) return false;
+    if (!legalPieceMove) return false;
+    if (!isSafeAfterMove(board, from, to, piece)) return false;
 
-  return true;                              
+    return true;
 }
 
 
@@ -50,8 +50,11 @@ function Board() {
     const [selected, setSelected] = useState(null);
     const [turn, setTurn] = useState(1);
     const [check, setCheck] = useState(0);
+    const [gameOver, setGameOver] = useState(false);
 
     const handleClick = (row, col) => {
+
+        if (gameOver) return;
         const clickedPiece = board[row][col];
 
         if (selected && selected.row === row && selected.col === col) {
@@ -94,46 +97,82 @@ function Board() {
             setTurn(!turn);
             setSelected(null);
 
-            if (Checks(newBoard, "k")) {
-                alert(`Black is in check!`);
-                setCheck(1);
+            const opponentKing = piece === piece.toUpperCase() ? "k" : "K";
+            const isInCheck = Checks(newBoard, opponentKing);
+
+            if (isInCheck) {
+
+                let hasEscape = false;
+
+                for (let r1 = 0; r1 < 8; r1++) {
+                    for (let c1 = 0; c1 < 8; c1++) {
+                        const current = newBoard[r1][c1];
+                        if (!current) continue;
+
+                        const isWhitePiece = current === current.toUpperCase();
+                        if ((opponentKing === "k" && isWhitePiece) || (opponentKing === "K" && !isWhitePiece)) continue;
+
+                        for (let r2 = 0; r2 < 8; r2++) {
+                            for (let c2 = 0; c2 < 8; c2++) {
+                                if (tryMove(newBoard, { row: r1, col: c1 }, { row: r2, col: c2 }, current)) {
+                                    hasEscape = true;
+                                    break;
+                                }
+                            }
+                            if (hasEscape) break;
+                        }
+                        if (hasEscape) break;
+                    }
+                    if (hasEscape) break;
+                }
+
+                if (!hasEscape) {
+                    alert(`${turn ? "Black" : "White"} is checkmated! Game over.`);
+                    setGameOver(true);
+                    setSelected(null);
+                    setCheck(1);
+                    return;
+                } else {
+                    alert(`${turn ? "Black" : "White"} is in check!`);
+                }
             }
-            if (Checks(newBoard, "K")) {
-                alert(`White is in check!`);
-                setCheck(1);
-            }
+
 
         }
     };
 
 
     return (
-        <div className="grid grid-cols-8 border border-gray-700 mx-auto mt-10 w-fit">
-            {board.map((row, rowIndex) =>
-                row.map((cell, colIndex) => {
-                    const isBlack = (rowIndex + colIndex) % 2 === 1;
-                    const imgKey = getImageKey(cell);
-                    const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
-                    return (
-                        <div
-                            key={`${rowIndex}-${colIndex}`}
-                            className={`w-16 h-16 flex items-center justify-center text-[32px] leading-none font-normal ${isBlack ? 'bg-gray-500' : 'bg-white'} 
+        <div className="flex flex-col items-center">
+            {gameOver && <div className="text-center text-red-600 mt-4 font-bold text-xl">Game Over: {!turn ? "Black" : "White"} is checkmated!</div>}
+
+            <div className="grid grid-cols-8 border border-gray-700 mx-auto mt-10 w-fit">
+
+                {board.map((row, rowIndex) =>
+                    row.map((cell, colIndex) => {
+                        const isBlack = (rowIndex + colIndex) % 2 === 1;
+                        const imgKey = getImageKey(cell);
+                        const isSelected = selected?.row === rowIndex && selected?.col === colIndex;
+                        return (
+                            <div
+                                key={`${rowIndex}-${colIndex}`}
+                                className={`w-16 h-16 flex items-center justify-center text-[32px] leading-none font-normal ${isBlack ? 'bg-gray-500' : 'bg-white'} 
                             ${isSelected ? "ring-2 ring-yellow-400" : ""}`}
-                            onClick={() => handleClick(rowIndex, colIndex)}
-                        >
-                            {imgKey && (
-                                <img
-                                    src={pieces[imgKey]}
-                                    alt={cell}
-                                    className="w-12 h-12 pointer-events-none"
-                                />
-                            )}
+                                onClick={() => handleClick(rowIndex, colIndex)}
+                            >
+                                {imgKey && (
+                                    <img
+                                        src={pieces[imgKey]}
+                                        alt={cell}
+                                        className="w-12 h-12 pointer-events-none"
+                                    />
+                                )}
 
-                        </div>
-
-                    );
-                })
-            )}
+                            </div>
+                        );
+                    })
+                )}
+            </div>
         </div>
     );
 }

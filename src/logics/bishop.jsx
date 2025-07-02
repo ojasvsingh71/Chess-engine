@@ -17,7 +17,7 @@ export function Bishop(board, from, to, piece) {
     while (i !== to.row && j !== to.col) {
         // console.log(i, j);
         if (board[i][j] !== "") {
-            alert("Invalid Move!!!");
+            // alert("Invalid Move!!!");
             return false;
         }
         i += rstep;
