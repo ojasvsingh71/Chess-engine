@@ -7,6 +7,7 @@ import { Knight } from "../logics/knight";
 import { Queen } from "../logics/queen";
 import { King } from "../logics/king";
 import { Checks } from "./checks";
+import { isSafeAfterMove } from "../logics/isSafeAfterMove";
 
 function getImageKey(piece) {
     if (!piece) return null;
@@ -14,6 +15,24 @@ function getImageKey(piece) {
     const type = piece.toUpperCase();
     return `${color}${type}`;
 }
+
+
+function tryMove(board, from, to, piece) {
+  const type = piece.toUpperCase();
+  const legalPieceMove =
+        (type === "P" && Pawn(board, from, to, piece))   ||
+        (type === "R" && Rook(board, from, to, piece))   ||
+        (type === "B" && Bishop(board, from, to, piece)) ||
+        (type === "N" && Knight(board, from, to, piece)) ||
+        (type === "Q" && Queen(board, from, to, piece))  ||
+        (type === "K" && King(board, from, to, piece));
+
+  if (!legalPieceMove) return false;       
+  if (!isSafeAfterMove(board, from, to, piece)) return false;
+
+  return true;                              
+}
+
 
 function Board() {
     const initialBoard = [
@@ -61,36 +80,9 @@ function Board() {
                 return;
             }
 
-            if (piece.toUpperCase() === "P") {
-                if (!Pawn(board, from, to, board[from.row][from.col])) {
-                    setSelected(null);
-                    return;
-                }
-            } else if (piece.toUpperCase() === "R") {
-                if (!Rook(board, from, to, board[from.row][from.col])) {
-                    setSelected(null);
-                    return;
-                }
-            } else if (piece.toUpperCase() === "B") {
-                if (!Bishop(board, from, to, board[from.row][from.col])) {
-                    setSelected(null);
-                    return;
-                }
-            } else if (piece.toUpperCase() === "N") {
-                if (!Knight(board, from, to, board[from.row][from.col])) {
-                    setSelected(null);
-                    return;
-                }
-            } else if (piece.toUpperCase() === "Q") {
-                if (!Queen(board, from, to, board[from.row][from.col])) {
-                    setSelected(null);
-                    return;
-                }
-            } else if (piece.toUpperCase() === "K") {
-                if (!King(board, from, to, board[from.row][from.col])) {
-                    setSelected(null);
-                    return;
-                }
+            if (!tryMove(board, from, to, piece)) {
+                setSelected(null);
+                return;
             }
 
 
